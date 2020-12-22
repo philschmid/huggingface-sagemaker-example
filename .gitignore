@@ -52,4 +52,4 @@ geckodriver.log
 .vscode
 
 github-token
-*.pt
+datasets/

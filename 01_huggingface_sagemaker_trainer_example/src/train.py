@@ -29,7 +29,6 @@ if __name__ =='__main__':
     args, _ = parser.parse_known_args()
 
     # Set up logging
-    
     logger = logging.getLogger(__name__)
 
     logging.basicConfig(level=logging.getLevelName('INFO'), handlers=[logging.StreamHandler(sys.stdout)],

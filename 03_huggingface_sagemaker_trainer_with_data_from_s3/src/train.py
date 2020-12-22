@@ -1,5 +1,6 @@
 from transformers import AutoModelForSequenceClassification, Trainer, TrainingArguments
 from sklearn.metrics import accuracy_score, precision_recall_fscore_support
+from datasets import load_from_disk
 import random
 import logging
 import sys
@@ -26,13 +27,19 @@ if __name__ =='__main__':
     parser.add_argument('--test_dir', type=str, default=os.environ['SM_CHANNEL_TEST'])
 
     args, _ = parser.parse_known_args()
-
-    # Get datasets
-    train_dataset  = torch.load(os.path.join(args.training_dir, 'train_dataset.pt'))
-    test_dataset  = torch.load(os.path.join(args.test_dir, 'test_dataset.pt'))
     
-    print(len(train_dataset))
-    print(len(test_dataset))
+    # Set up logging
+    logger = logging.getLogger(__name__)
+
+    logging.basicConfig(level=logging.getLevelName('INFO'), handlers=[logging.StreamHandler(sys.stdout)],
+                        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+  
+    # load datasets
+    train_dataset  = load_from_disk(args.training_dir)
+    test_dataset  = load_from_disk(args.test_dir)
+    
+    logger.info(f" loaded train_dataset length is: {len(train_dataset)}")
+    logger.info(f" loaded test_dataset length is: {len(test_dataset)}")
 
     # compute metrics function for binary classification
     def compute_metrics(pred):
@@ -46,6 +53,8 @@ if __name__ =='__main__':
             'precision': precision,
             'recall': recall
         }
+    # download model from model hub
+    model = AutoModelForSequenceClassification.from_pretrained(args.model_name)
 
     # define training args 
     training_args = TrainingArguments(
