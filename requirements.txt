@@ -1,7 +1,7 @@
 sagemaker
-torch==1.5.0
+torch==1.6.0
 transformers
 datasets
 sklearn
 boto3
-sagemaker[local]
+'sagemaker[local]'
