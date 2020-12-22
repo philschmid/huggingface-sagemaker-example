@@ -47,11 +47,6 @@ if __name__ =='__main__':
     train_dataset, test_dataset = load_dataset('imdb', split=['train', 'test'])
     test_dataset = test_dataset.shuffle().select(range(10000)) # smaller the size for test dataset to 10k 
 
-    # test
-    train_dataset = train_dataset.shuffle().select(range(1000)) # smaller the size for test dataset to 10k 
-    test_dataset = test_dataset.shuffle().select(range(50)) # smaller the size for test dataset to 10k 
-
-
 
     # tokenize dataset
     train_dataset = train_dataset.map(tokenize, batched=True, batch_size=len(train_dataset))
