@@ -20,21 +20,13 @@ if __name__ =='__main__':
     # Data, model, and output directories
     parser.add_argument('--output-data-dir', type=str, default=os.environ['SM_OUTPUT_DATA_DIR'])
     parser.add_argument('--model-dir', type=str, default=os.environ['SM_MODEL_DIR'])
-    parser.add_argument('--train', type=str, default=os.environ['SM_CHANNEL_TRAIN'])
-    parser.add_argument('--test', type=str, default=os.environ['SM_CHANNEL_TEST'])
+    parser.add_argument('--n-gpus', type=str, default=os.environ['SM_NUM_GPUS'])
+    # parser.add_argument('--train', type=str, default=os.environ['SM_CHANNEL_TRAIN'])
+    # parser.add_argument('--test', type=str, default=os.environ['SM_CHANNEL_TEST'])
 
     args, _ = parser.parse_known_args()
 
     # ... load from args.train and args.test, train a model, write model to args.model_dir.
-
-    logger = logging.getLogger(__name__)
-
-    # Setup logging
-    logging.basicConfig(
-    format="%(asctime)s - %(levelname)s - %(name)s -   %(message)s",
-    datefmt="%m/%d/%Y %H:%M:%S",
-    level=logging.INFO,
-    )
 
     # load dataset
 
@@ -56,8 +48,8 @@ if __name__ =='__main__':
     test_dataset = test_dataset.shuffle().select(range(10000)) # smaller the size for test dataset to 10k 
 
     # test
-    train_dataset = train_dataset.shuffle().select(range(100)) # smaller the size for test dataset to 10k 
-    test_dataset = test_dataset.shuffle().select(range(5)) # smaller the size for test dataset to 10k 
+    train_dataset = train_dataset.shuffle().select(range(1000)) # smaller the size for test dataset to 10k 
+    test_dataset = test_dataset.shuffle().select(range(50)) # smaller the size for test dataset to 10k 
 
 
 
@@ -70,7 +62,7 @@ if __name__ =='__main__':
 
     # Log a few random samples from the training set:
     for index in random.sample(range(len(train_dataset)), 3):
-        logger.info(f"Sample {index} of the training set: {train_dataset[index]}.")
+        print(f"Sample {index} of the training set: {train_dataset[index]}.")
 
     # set format for pytorch
     train_dataset.rename_column_("label", "labels")
@@ -114,9 +106,8 @@ if __name__ =='__main__':
 
     # writes eval result to file which can be accessed later
     with open(os.path.join(args.model_dir, "eval_results.txt"), "w") as writer:
-        logger.info(f"***** Eval results *****")
+        print(f"***** Eval results *****")
         for key, value in sorted(eval_result.items()):
-            logger.info(f"  {key} = {value}")
             writer.write(f"{key} = {value}\n")
 
     trainer.save_model(args.model_dir)  # Saves the model
