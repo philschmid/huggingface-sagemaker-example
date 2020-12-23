@@ -38,3 +38,12 @@ pip install -r requirements.txt
 ## Getting started with Sagemaker Studio
 
 If you want to use an example in sagemaker studio. You can open your sagemaker studio and then clone the github repository. Afterwards you have to install dependencies from the `requirements.txt`.
+
+
+# Trouble shooting 
+
+1. downloading dataset if `NonMatchingSplitsSizesError`
+
+```python
+!rm -rf /root/.cache/huggingface/datasets
+```
