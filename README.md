@@ -47,3 +47,5 @@ If you want to use an example in sagemaker studio. You can open your sagemaker s
 ```python
 !rm -rf /root/.cache/huggingface/datasets
 ```
+
+2. If you get an `UnknownServiceError` with `Unknown service: 'sagemaker-featurestore-runtime'` run `pip install -r requirements.txt --upgrade` and restart your jupyter runtime.
